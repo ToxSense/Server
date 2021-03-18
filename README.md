@@ -1,0 +1,19 @@
+# Learning Atmospheres - ToxSense 
+
+## Online Server
+
+The calculated air quality index is sent to the server, together with the users gps location and the captured image. This “POST-Request” contains a JSON-String-Dictionary with all the data. The request is captured by an FastAPI-Server [FastAPI], a server handling the request in Python-programming-language [Python] at https://api.ToxSense.de. The JSON-String is decoded into a Python dictionary for further processing.
+
+The process described in the next part is not only applied to the actual latitude and longitude of the user, but also for surrounding positions approximately 10 meters apart. The first step consists of the generation of an urban figure ground plan, using the Maperitive [Maperitive] utility, for the user’s exact position with an approximate radius of 100 meters, as this represents an elemental input for the AI. Then, from the existing ToxSense database, the closest three sensor values together with their direction relative to the users position are imported into the inference dataset. The last data collected is composed out of the current wind speed in meters per second and the wind direction, collected using the Meteostat library. [ Meteostat] Finally, using the gathered data, an inference on the trained TensorFlow-Model [TensorFlow] is run. As a result a single AQI-value is returned to the main function.
+
+Now the image sent by the users headband and the calculated AQI is saved into an independent database, later used for retraining and updating the AI-model on the headband, ensuring more accurate results only through a widespread usage of the headband. Now the server returns a new JSON-array containing the calculated aqi, on one hand for the users position, on the other hand for positions in every direction from the user, making it possible to make a walking suggestion, together with some informational data displayed later on the smartphone application. Lastly the data is saved into the main ToxSense-database, making it available online on the ToxSense Map viewable by everyone.
+
+This Website (https://ToxSense.de) is programmed in HTML5, PHP8, CSS3, but the main functions are deployed with JavaScript. The main frame shows a Leaflet-Map [Leaflet, OpenStreetMap], combined with its Heatmap-Plugin [Heatmap.js]. The third layer is only shown on a high zoom-level, displaying clickable circles that open pop-ups revealing the absolute AQI-values. When the map is loaded in the browser, the JavaScript makes an AJAX-request to an PHP-script, that returns all the values in the ToxSense-database. This Database is running on an MariaDB [MariaDB] server queryable with MySQL and contains all AQI-data from the ToxSense-Project, but it is also synchronized with the sensor.community [Sensor.community] database for very accurate base values. 
+
+The AQIs are then displayed as a modified heatmap, that, instead of adding the values of closest points together, always calculates and displays the averaged figure. All the different server applications are deployed in virtual environments, ensuring an easy reproduction and deployment on any platform.
+
+## Credits
+
+This project is imagined and created by Timo Bilhöfer, Markus Pfaff and Maria Rădulescu.
+
+As part of the seminar *Learning Atmospheres* in the winter-semester 2020/21 it is supported by Irina Auernhammer, Silas Kalmbach and Prof. Lucio Blandini from the[ Institute for Lightweight Structures and Conceptual Design (**ILEK**)](https://www.ilek.uni-stuttgart.de/) and is also part of the[ Collaborative Research Centre 1244 (**SFB 1244**)](https://www.sfb1244.uni-stuttgart.de/).

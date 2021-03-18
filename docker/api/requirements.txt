@@ -1,0 +1,10 @@
+meteostat
+pandas
+pydantic
+numpy
+fastapi
+PyMySQL
+Pillow
+tensorflow
+cryptography
+slowapi

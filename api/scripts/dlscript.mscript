@@ -1,0 +1,4 @@
+set-geo-bounds 9.266,48.756,9.267999999999999,48.757999999999996
+download-osm-overpass bounds=9.266,48.756,9.267999999999999,48.757999999999996 service-url="https://overpass.kumi.systems/api/" query="way[building]($b$);out;>;out qt;"
+export-bitmap file=temp0.png width=64 height=64 zoom=16
+exit
